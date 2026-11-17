@@ -1,5 +1,18 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "sha256": [],
-  "notes": "Empty starter database. Only add independently verified, lawfully obtained hashes. A hash match is an indicator, not an automatic verdict."
+  "notes": "No verified ARK cheat file hashes are included. Keep this list empty until a hash is independently verified and its provenance documented. Keyword matches are weak indicators only.",
+  "keyword_categories": [
+    "aim assistance",
+    "ESP / wall information",
+    "movement or weapon modification",
+    "trainer / memory modification",
+    "code injection terminology",
+    "generic cheat label"
+  ],
+  "research_sources": [
+    "https://survivetheark.com/index.php?/forums/topic/528772-community-crunch-223-genesis-transfers-fixes-and-on-the-horizon/",
+    "https://store.steampowered.com/news/posts/?appids=346110&enddate=1527722920&feed=steam_community_announcements",
+    "https://steamcommunity.com/app/346110/discussions/7/405691491126048213/"
+  ]
 }

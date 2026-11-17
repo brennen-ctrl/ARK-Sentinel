@@ -1,5 +1,5 @@
 from __future__ import annotations
-import csv, hashlib, json, os, queue, subprocess, threading, time
+import csv, hashlib, json, os, queue, re, subprocess, threading, time
 from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
@@ -7,7 +7,21 @@ from tkinter import filedialog, messagebox, ttk
 APP = "ARK Cheat Detector"
 ROOT = Path(__file__).resolve().parent.parent
 SIG_FILE = ROOT / "data" / "signatures.json"
-TERMS = ("cheat", "trainer", "injector", "memory editor", "ark hack")
+# Broad indicator categories based on public ARK anti-cheat discussions.
+# These are keyword heuristics only; ordinary tools can match them.
+PATTERNS = {
+    "Aim assistance": re.compile(r"\\b(?:aimbot|aim[-_ ]?bot|triggerbot|trigger[-_ ]?bot)\\b", re.I),
+    "ESP / wall information": re.compile(r"\\b(?:esp|wallhack|wall[-_ ]?hack|radar)\\b", re.I),
+    "Movement or weapon modification": re.compile(r"\\b(?:speedhack|speed[-_ ]?hack|no[-_ ]?recoil|recoil[-_ ]?control|rapidfire)\\b", re.I),
+    "Trainer / memory modification": re.compile(r"\\b(?:trainer|memory[-_ ]?editor|cheat[-_ ]?engine)\\b", re.I),
+    "Code injection terminology": re.compile(r"\\b(?:injector|dll[-_ ]?injector)\\b", re.I),
+    "Generic cheat label": re.compile(r"\\b(?:cheat|ark[-_ ]?hack)\\b", re.I),
+}
+def matched_category(value):
+    for category, pattern in PATTERNS.items():
+        if pattern.search(value):
+            return category
+    return None
 BG, PANEL, FG, MUTED, BLUE = "#10151f", "#192333", "#e8eef7", "#9aabc0", "#39a7ff"
 
 class Scanner:
