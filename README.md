@@ -18,8 +18,9 @@ These are **filename and visible process-name keyword checks**, not signatures f
 ## Features
 
 - Dark gaming-style desktop interface.
-- User selects folders and explicitly approves each scan.
-- Checks visible process names and selected-folder filenames for the categories above.
+- Automatically detects all Windows fixed drives and recursively scans their accessible files after the user explicitly approves the whole-PC scan.
+- Checks visible process names and filenames across accessible fixed-drive locations for the categories above.
+- Reports the number of files scanned and inaccessible items skipped.
 - Calculates SHA-256 for files up to 200 MiB and compares against a local signature list.
 - Exports a local JSON report to Documents.
 - No telemetry, uploads, file deletion, or file modification.
@@ -28,7 +29,7 @@ These are **filename and visible process-name keyword checks**, not signatures f
 
 This is not an official ARK, BattlEye, or Easy Anti-Cheat product. It cannot prove cheating or guarantee a clean system. The starter SHA-256 database is intentionally empty: no hash has been added unless it can be independently verified and safely attributed. Do not label users as cheaters based only on a local scan.
 
-The scanner does not inspect protected process memory, inject into processes, bypass Windows permissions, or change game files. It cannot reliably detect server-side exploits such as meshing, duplication, or suspicious in-game behavior. Those require server-side telemetry, game-owner investigation, or official anti-cheat systems. Microsoft Store/Xbox package folders may be protected; choose only folders Windows allows you to inspect.
+The whole-PC scan covers detected fixed drives, but it is not guaranteed to read every item: Windows-protected folders, inaccessible files, and some Microsoft Store/Xbox package locations may be skipped when Windows denies access. The scanner does not request elevation, bypass Windows permissions, inspect protected process memory, inject into processes, or change game files. It cannot reliably detect server-side exploits such as meshing, duplication, or suspicious in-game behavior. Those require server-side telemetry, game-owner investigation, or official anti-cheat systems.
 
 ## Run
 
