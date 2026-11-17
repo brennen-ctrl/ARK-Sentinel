@@ -10,12 +10,12 @@ SIG_FILE = ROOT / "data" / "signatures.json"
 # Broad indicator categories based on public ARK anti-cheat discussions.
 # These are keyword heuristics only; ordinary tools can match them.
 PATTERNS = {
-    "Aim assistance": re.compile(r"\\b(?:aimbot|aim[-_ ]?bot|triggerbot|trigger[-_ ]?bot)\\b", re.I),
-    "ESP / wall information": re.compile(r"\\b(?:esp|wallhack|wall[-_ ]?hack|radar)\\b", re.I),
-    "Movement or weapon modification": re.compile(r"\\b(?:speedhack|speed[-_ ]?hack|no[-_ ]?recoil|recoil[-_ ]?control|rapidfire)\\b", re.I),
-    "Trainer / memory modification": re.compile(r"\\b(?:trainer|memory[-_ ]?editor|cheat[-_ ]?engine)\\b", re.I),
-    "Code injection terminology": re.compile(r"\\b(?:injector|dll[-_ ]?injector)\\b", re.I),
-    "Generic cheat label": re.compile(r"\\b(?:cheat|ark[-_ ]?hack)\\b", re.I),
+    "Aim assistance": re.compile(r"\b(?:aimbot|aim[-_ ]?bot|triggerbot|trigger[-_ ]?bot)\b", re.I),
+    "ESP / wall information": re.compile(r"\b(?:esp|wallhack|wall[-_ ]?hack|radar)\b", re.I),
+    "Movement or weapon modification": re.compile(r"\b(?:speedhack|speed[-_ ]?hack|no[-_ ]?recoil|recoil[-_ ]?control|rapidfire)\b", re.I),
+    "Trainer / memory modification": re.compile(r"\b(?:trainer|memory[-_ ]?editor|cheat[-_ ]?engine)\b", re.I),
+    "Code injection terminology": re.compile(r"\b(?:injector|dll[-_ ]?injector)\b", re.I),
+    "Generic cheat label": re.compile(r"\b(?:cheat|ark[-_ ]?hack)\b", re.I),
 }
 def matched_category(value):
     for category, pattern in PATTERNS.items():
