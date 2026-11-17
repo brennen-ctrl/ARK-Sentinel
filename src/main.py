@@ -66,10 +66,17 @@ class Scanner:
         for root in roots:
             if self.cancel:
                 break
-            self.emit(f"Scanning drive {root} ...")
+            self.emit(f"Starting drive {root} ...")
+            directory_count = 0
             for current, dirs, names in os.walk(root, topdown=True, followlinks=False, onerror=on_walk_error):
                 if self.cancel:
                     break
+                directory_count += 1
+                # Send directory-level progress too: some folders take time to enumerate
+                # before 250 files have been processed.
+                if directory_count == 1 or directory_count % 20 == 0:
+                    self.emit(f"Scanning {root} | {self.files_scanned:,} files checked | "
+                              f"{directory_count:,} folders visited | {self.skipped:,} inaccessible skipped")
                 # Avoid filesystem bookkeeping folders; Windows and installed-app folders
                 # remain in scope when the current account has read permission.
                 dirs[:] = [d for d in dirs if d.lower() not in SKIP_DIRS]
@@ -166,13 +173,16 @@ class App:
         threading.Thread(target=self.worker, daemon=True).start()
 
     def worker(self):
-        findings = self.scanner.run(self.drives)
-        report = {"application": APP, "created_unix": int(time.time()),
-            "scan_scope": self.scan_roots, "files_scanned": self.scanner.files_scanned,
-            "inaccessible_items_skipped": self.scanner.skipped, "findings": findings,
-            "cancelled": self.scanner.cancel,
-            "disclaimer": "Indicators are not proof. Access-denied locations are skipped. No findings do not guarantee a clean PC."}
-        self.events.put(("done", report))
+        try:
+            findings = self.scanner.run(self.drives)
+            report = {"application": APP, "created_unix": int(time.time()),
+                "scan_scope": self.scan_roots, "files_scanned": self.scanner.files_scanned,
+                "inaccessible_items_skipped": self.scanner.skipped, "findings": findings,
+                "cancelled": self.scanner.cancel,
+                "disclaimer": "Indicators are not proof. Access-denied locations are skipped. No findings do not guarantee a clean PC."}
+            self.events.put(("done", report))
+        except Exception as exc:
+            self.events.put(("error", f"{type(exc).__name__}: {exc}"))
 
     def cancel(self):
         if hasattr(self, "scanner"): self.scanner.cancel = True
@@ -184,6 +194,11 @@ class App:
                 event = self.events.get_nowait()
                 if event[0] == "status":
                     self.status.config(text=event[1])
+                elif event[0] == "error":
+                    self.bar.stop()
+                    self.start.config(state="normal"); self.stop.config(state="disabled")
+                    self.status.config(text="Scan stopped because of an error.")
+                    messagebox.showerror("Scan error", "The scan could not finish:\\n\\n" + event[1])
                 else:
                     self.report = event[1]; self.bar.stop()
                     self.start.config(state="normal"); self.stop.config(state="disabled")
